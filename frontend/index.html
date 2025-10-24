@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Resume Reviewer</title>
+  <style>
+    body { font-family: Arial; background: #f4f4f9; padding: 20px; }
+    .container { max-width: 600px; margin: auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    h2 { text-align: center; color: #333; }
+    input[type=file] { margin: 15px 0; }
+    button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+    button:hover { background: #0056b3; }
+    pre { background: #eee; padding: 15px; border-radius: 5px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>📄 AI Resume Reviewer</h2>
+    <input type="file" id="fileInput" accept=".pdf" />
+    <button onclick="uploadFile()">Upload & Review</button>
+    <h3>Feedback:</h3>
+    <pre id="output">Upload a PDF to get AI feedback...</pre>
+  </div>
+
+  <script>
+    async function uploadFile() {
+      const file = document.getElementById('fileInput').files[0];
+      if (!file) return alert("Please upload a PDF file!");
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch("http://127.0.0.1:8088/reviewResume", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await response.json();
+      document.getElementById("output").textContent = data.feedback || "No feedback returned.";
+    }
+  </script>
+</body>
+</html>
