@@ -1,44 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Resume Reviewer</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume Reviewer</title>
   <style>
-    body { font-family: Arial; background: #f4f4f9; padding: 20px; }
-    .container { max-width: 600px; margin: auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-    h2 { text-align: center; color: #333; }
-    input[type=file] { margin: 15px 0; }
-    button { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
-    button:hover { background: #0056b3; }
-    pre { background: #eee; padding: 15px; border-radius: 5px; white-space: pre-wrap; }
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    input, button {
+      display: block;
+      margin: 15px 0;
+      padding: 10px;
+      width: 100%;
+      font-size: 16px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #result {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      white-space: pre-wrap;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>📄 AI Resume Reviewer</h2>
-    <input type="file" id="fileInput" accept=".pdf" />
-    <button onclick="uploadFile()">Upload & Review</button>
-    <h3>Feedback:</h3>
-    <pre id="output">Upload a PDF to get AI feedback...</pre>
-  </div>
+
+  <h1>AI Resume Reviewer</h1>
+
+  <input type="file" id="fileInput" accept=".pdf">
+  <button id="submitBtn">Upload Resume</button>
+
+  <div id="result"></div>
 
   <script>
-    async function uploadFile() {
-      const file = document.getElementById('fileInput').files[0];
-      if (!file) return alert("Please upload a PDF file!");
+    const BACKEND_URL = "https://resume-reviewer-tl5t.onrender.com";
+
+    document.querySelector("#submitBtn").addEventListener("click", async () => {
+      const fileInput = document.querySelector("#fileInput");
+
+      if (!fileInput.files.length) {
+        alert("Please select a PDF file first!");
+        return;
+      }
 
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", fileInput.files[0]);
 
-      const response = await fetch('https://resume-reviewer-tl5t.onrender.com/analyseFile', {
-        method: "POST",
-        body: formData
-      });
+      document.querySelector("#result").textContent = "Analyzing resume, please wait...";
 
-      const data = await response.json();
-      document.getElementById("output").textContent = data.feedback || "No feedback returned.";
-    }
+      try {
+        const response = await fetch(`${BACKEND_URL}/analyseFile`, {
+          method: "POST",
+          body: formData
+        });
+
+        if (!response.ok) {
+          throw new Error(`Server error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        document.querySelector("#result").innerHTML = `<pre>${data.summary}</pre>`;
+      } catch (err) {
+        console.error(err);
+        document.querySelector("#result").textContent = "Error uploading file. Check console for details.";
+      }
+    });
   </script>
+
 </body>
 </html>
