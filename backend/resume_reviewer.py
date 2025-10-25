@@ -18,7 +18,7 @@ app = FastAPI(title="Resume Reviewer")
 # CORS middleware to allow frontend requests
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://resume-reviewer-1-4zx7.onrender.com"],  # Replace "*" with your frontend URL for security
+    allow_origins=["https://resume-reviewer-1-4zx7.onrender.com"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -56,6 +56,7 @@ def get_resume_feedback(text):
             {
                 "role": "user",
                 "content": (
+                    "Please act as a hr or a recruiter\n"
                     f"Here is a resume:\n\n{text}\n\n"
                     "Please analyze it and provide:\n"
                     "1. Key strengths\n"
