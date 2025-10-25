@@ -18,7 +18,7 @@ app = FastAPI(title="Resume Reviewer")
 # CORS middleware to allow frontend requests
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Replace "*" with your frontend URL for security
+    allow_origins=["https://resume-reviewer-1-4zx7.onrender.com"],  # Replace "*" with your frontend URL for security
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
