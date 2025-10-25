@@ -1,89 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Resume Reviewer</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 700px;
-      margin: 50px auto;
-      padding: 20px;
-      background-color: #f9f9f9;
-    }
-    h1 {
-      text-align: center;
-      color: #333;
-    }
-    input, button {
-      display: block;
-      margin: 15px 0;
-      padding: 10px;
-      width: 100%;
-      font-size: 16px;
-    }
-    button {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    #result {
-      margin-top: 20px;
-      padding: 15px;
-      background-color: #fff;
-      border: 1px solid #ddd;
-      white-space: pre-wrap;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Reviewer - AI-Powered Resume Analysis</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Background blur effect -->
+    <div class="background-blur">
+        <div class="blur-circle-1"></div>
+        <div class="blur-circle-2"></div>
+    </div>
 
-  <h1>AI Resume Reviewer</h1>
+    <!-- Main container -->
+    <div class="container">
+        <!-- Glassmorphism card -->
+        <div class="card">
+            <!-- Header -->
+            <div class="header">
+                <h1>Resume Reviewer</h1>
+                <p>Get AI-powered insights to enhance your resume</p>
+            </div>
 
-  <input type="file" id="fileInput" accept=".pdf">
-  <button id="submitBtn">Upload Resume</button>
+            <!-- Upload section -->
+            <div class="upload-section">
+                <label class="upload-label" for="fileInput">Upload Your Resume</label>
+                <label for="fileInput" class="upload-area" id="uploadArea">
+                    <div class="upload-content">
+                        <div class="upload-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="upload-text" id="uploadText">Click to upload or drag and drop</div>
+                            <div class="upload-subtext">PDF files only (Max 10MB)</div>
+                        </div>
+                    </div>
+                </label>
+                <input type="file" id="fileInput" class="file-input" accept=".pdf" aria-label="Upload resume PDF file">
+            </div>
 
-  <div id="result"></div>
+            <!-- Error message -->
+            <div id="errorMessage" class="error-message hidden" role="alert">
+                <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+                <p class="error-text" id="errorText"></p>
+            </div>
 
-  <script>
-    const BACKEND_URL = "https://resume-reviewer-tl5t.onrender.com";
+            <!-- Submit button -->
+            <button id="submitBtn" class="submit-btn" disabled>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                <span id="submitText">Analyze Resume</span>
+            </button>
 
-    document.querySelector("#submitBtn").addEventListener("click", async () => {
-      const fileInput = document.querySelector("#fileInput");
+            <!-- Results section -->
+            <div id="resultsSection" class="results-section hidden">
+                <h2 class="results-title">Analysis Results</h2>
+                <div class="results-container">
+                    <div class="results-content" id="resultsContent"></div>
+                </div>
+                <p class="results-hint">Scroll to see more results</p>
+            </div>
+        </div>
 
-      if (!fileInput.files.length) {
-        alert("Please select a PDF file first!");
-        return;
-      }
+        <!-- Footer -->
+        <p class="footer">Your resume is analyzed securely and privately</p>
+    </div>
 
-      const formData = new FormData();
-      formData.append("file", fileInput.files[0]);
-
-      document.querySelector("#result").textContent = "Analyzing resume, please wait...";
-
-      try {
-        const response = await fetch(`${BACKEND_URL}/analyseFile`, {
-          method: "POST",
-          body: formData
-        });
-
-        if (!response.ok) {
-          throw new Error(`Server error: ${response.status}`);
-        }
-
-        const data = await response.json();
-        document.querySelector("#result").innerHTML = `<pre>${data.summary}</pre>`;
-      } catch (err) {
-        console.error(err);
-        document.querySelector("#result").textContent = "Error uploading file. Check console for details.";
-      }
-    });
-  </script>
-
+    <script src="script.js"></script>
 </body>
 </html>
