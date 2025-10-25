@@ -31,7 +31,7 @@
       const formData = new FormData();
       formData.append("file", file);
 
-      const response = await fetch("http://127.0.0.1:8088/reviewResume", {
+      const response = await fetch('https://resume-reviewer-tl5t.onrender.com/analyseFile', {
         method: "POST",
         body: formData
       });
